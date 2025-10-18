@@ -1,0 +1,44 @@
+// This Pine Script® code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © andre_mare
+
+//@version=6
+indicator("Indicator: 2 EMA Crossover", overlay=true)
+
+// ========================== EMA Indicator: Calculations ==========================
+
+// User Input
+emaLength1 = input.int(defval = 13, title="EMA 1 Length", minval = 1, maxval = 1000, step = 5)
+emaLength2 = input.int(defval = 34, title="EMA 2 Length", minval = 1, maxval = 1000, step = 5)
+
+// EMA Indicator Calculations
+ema1 = ta.ema(close, emaLength1)
+ema2 = ta.ema(close, emaLength2)
+
+
+// ========================== EMA Indicator: Signals ==========================
+
+// Buy & Short Signals
+buySignal = ta.crossover(ema1, ema2)
+sellSignal = ta.crossunder(ema1, ema2)
+
+
+// ========================== EMA Indicator: Plotting ==========================
+
+// Plotting Signals
+plotshape(buySignal,title = "BUY", style = shape.triangleup, location = location.belowbar, color = color.green, size = size.small, text = "BUY", textcolor = color.white )
+plotshape(sellSignal,title = "SHORT", style = shape.triangledown, location = location.abovebar, color = color.red, size = size.small, text = "SHORT",textcolor = color.white )
+
+// Plotting EMA Indicators
+a = plot(ema1, title = "SEMA", color = color.new(color.green,100),linewidth = 2)
+b = plot(ema2, title = "LEMA", color = color.new(color.red,100),linewidth = 2)
+
+fill(a,b, color = color.new(#3bcee2, 70))
+
+
+// ========================== EMA Indicator: Alerts ==========================
+
+if buySignal
+    alert("BUY",alert.freq_once_per_bar_close)
+
+if sellSignal
+    alert("SHORT",alert.freq_once_per_bar_close)

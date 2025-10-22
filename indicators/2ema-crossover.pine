@@ -2,7 +2,7 @@
 // © andre_mare
 
 //@version=6
-indicator("Indicator: 2 EMA Crossover", overlay=true)
+indicator("Indicator: 2 EMA Crossover [Andre Mare]", overlay=true)
 
 // ========================== EMA Indicator: Calculations ==========================
 
@@ -17,28 +17,28 @@ ema2 = ta.ema(close, emaLength2)
 
 // ========================== EMA Indicator: Signals ==========================
 
-// Buy & Short Signals
-buySignal = ta.crossover(ema1, ema2)
-sellSignal = ta.crossunder(ema1, ema2)
+// Upward Momentum & Downward Momentum Signals
+isUpwardSignal = ta.crossover(ema1, ema2)
+isDownwardSignal = ta.crossunder(ema1, ema2)
 
 
 // ========================== EMA Indicator: Plotting ==========================
 
-// Plotting Signals
-plotshape(buySignal,title = "BUY", style = shape.triangleup, location = location.belowbar, color = color.green, size = size.small, text = "BUY", textcolor = color.white )
-plotshape(sellSignal,title = "SHORT", style = shape.triangledown, location = location.abovebar, color = color.red, size = size.small, text = "SHORT",textcolor = color.white )
-
 // Plotting EMA Indicators
-a = plot(ema1, title = "SEMA", color = color.new(color.green,100),linewidth = 2)
-b = plot(ema2, title = "LEMA", color = color.new(color.red,100),linewidth = 2)
+a = plot(ema1, title = "SEMA", color = color.new(color.green,70),linewidth = 2)
+b = plot(ema2, title = "LEMA", color = color.new(color.red,70),linewidth = 2)
 
 fill(a,b, color = color.new(#3bcee2, 70))
+
+// Plotting Signals
+plotshape(isUpwardSignal, title = "Upward Momentum", text = "Upward Momentum", style = shape.triangleup, location = location.belowbar, color = color.green, size = size.small, textcolor = color.white )
+plotshape(isDownwardSignal, title = "Downward Momentum", text = "Downward Momentum", style = shape.triangledown, location = location.abovebar, color = color.red, size = size.small, textcolor = color.white )
 
 
 // ========================== EMA Indicator: Alerts ==========================
 
-if buySignal
-    alert("BUY",alert.freq_once_per_bar_close)
+if isUpwardSignal
+    alert("Upward Momentum", alert.freq_once_per_bar_close)
 
-if sellSignal
-    alert("SHORT",alert.freq_once_per_bar_close)
+if isDownwardSignal
+    alert("Downward Momentum", alert.freq_once_per_bar_close)
